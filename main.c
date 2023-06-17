@@ -1126,11 +1126,11 @@ int main() {
 
 		for (j = 0; j <= num_cnt; j++)
 		{
-			//createVirusOneby();
+			createVirusOneby();
 		}
 
-		//trackingVirus();
-		//trackingVirusOneby();
+		trackingVirus();
+		trackingVirusOneby();
 
 
 
@@ -1162,14 +1162,14 @@ int main() {
 
 		if (vertical_num == 10) {
 			//createVirusHorizontal();
-			//createVirusVertical();
+			createVirusVertical();
 			//createVirusCircle();
 			//createVirusSquare();
 			vertical_cnt++;
 		}
 
 		if (vertical_cnt >= 1) {
-			//trackingVirusVertical();
+			trackingVirusVertical();
 			//trackingVirusHorizontal();
 
 		}
