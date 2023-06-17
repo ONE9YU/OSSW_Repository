@@ -1161,7 +1161,7 @@ int main() {
 
 
 		if (vertical_num == 10) {
-			//createVirusHorizontal();
+			createVirusHorizontal();
 			createVirusVertical();
 			//createVirusCircle();
 			//createVirusSquare();
@@ -1170,7 +1170,7 @@ int main() {
 
 		if (vertical_cnt >= 1) {
 			trackingVirusVertical();
-			//trackingVirusHorizontal();
+			trackingVirusHorizontal();
 
 		}
 
