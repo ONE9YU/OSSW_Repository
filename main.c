@@ -158,6 +158,8 @@ int main() {
 			spear_wear();
 		}
 	}
+	if (_kbhit())
+		moveHuman();
 
 	getchar();
 
