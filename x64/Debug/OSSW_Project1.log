@@ -1,9 +1,72 @@
-﻿  main.c
-C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(620,9): warning C4101: 'j' :참조되지 않은 지역 변수입니다.
-C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(1018,9): warning C4101: 'b' :참조되지 않은 지역 변수입니다.
-C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(1018,12): warning C4101: 'c' :참조되지 않은 지역 변수입니다.
-C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(1018,15): warning C4101: 'd' :참조되지 않은 지역 변수입니다.
-C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(1112,9): warning C4101: 'y' :참조되지 않은 지역 변수입니다.
-C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(1112,6): warning C4101: 'x' :참조되지 않은 지역 변수입니다.
-C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(1145,6): warning C4101: 'i' :참조되지 않은 지역 변수입니다.
+﻿  Create.c
+C:\Users\USER-PC\source\repos\OSSW_Project1\Create.c(6,2): warning C4013: 'SetCurrentCursorPos'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\Create.c(161,2): warning C4013: 'drawRect'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+  Cursor.c
+  Draw.c
+C:\Users\USER-PC\source\repos\OSSW_Project1\Draw.c(9,3): warning C4013: 'SetCurrentCursorPos'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+  Human.c
+C:\Users\USER-PC\source\repos\OSSW_Project1\Human.c(11,5): warning C4013: 'ShiftLeft'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\Human.c(14,5): warning C4013: 'ShiftRight'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\Human.c(17,5): warning C4013: 'ShiftUp'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\Human.c(20,5): warning C4013: 'ShiftDown'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+  Item.c
+C:\Users\USER-PC\source\repos\OSSW_Project1\Item.c(20,3): warning C4013: 'SetCurrentCursorPos'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\Item.c(32,3): warning C4013: 'createScore'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\Item.c(133,3): warning C4013: 'updateLife'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\Item.c(176,15): warning C4101: 'd' :참조되지 않은 지역 변수입니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\Item.c(340,15): warning C4101: 'd' :참조되지 않은 지역 변수입니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\Item.c(431,9): warning C4101: 'i' :참조되지 않은 지역 변수입니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\Item.c(431,6): warning C4101: 'x' :참조되지 않은 지역 변수입니다.
+  Life.c
+C:\Users\USER-PC\source\repos\OSSW_Project1\Life.c(6,2): warning C4013: 'SetCurrentCursorPos'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\Life.c(20,2): warning C4013: 'drawRect'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+  main.c
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(13,19): warning C4142: 'start_time': 형식이 재정의되었지만 심각하지는 않습니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\data.h(5): message : 'start_time' 선언을 참조하십시오.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(14,17): warning C4142: 'end_time': 형식이 재정의되었지만 심각하지는 않습니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\data.h(6): message : 'end_time' 선언을 참조하십시오.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(70,2): warning C4013: 'removeCursor'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(71,2): warning C4013: 'printTitle'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(74,2): warning C4013: 'createTime'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(75,2): warning C4013: 'createLife'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(76,2): warning C4013: 'drawItemBoard'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(77,2): warning C4013: 'createScore'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(79,2): warning C4013: 'createHuman'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(80,2): warning C4013: 'createVirus'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(86,4): warning C4013: 'moveHuman'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(97,4): warning C4013: 'createVirusOneby'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(99,3): warning C4013: 'trackingVirus'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(100,3): warning C4013: 'trackingVirusOneby'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(102,11): warning C4013: 'DetectCollisionV'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(106,5): warning C4013: 'updateLife'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(107,5): warning C4013: 'SetCurrentCursorPos'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(113,5): warning C4013: 'GameOver'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(117,4): warning C4013: 'updateTime'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(131,4): warning C4013: 'createVirusVertical'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(138,4): warning C4013: 'trackingVirusVertical'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(148,3): warning C4013: 'clock_item'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(149,3): warning C4013: 'phoenix_item'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(150,3): warning C4013: 'life_item'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(151,3): warning C4013: 'boom_item'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(152,3): warning C4013: 'spear_item'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(158,4): warning C4013: 'spear_wear'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(64,6): warning C4101: 'i' :참조되지 않은 지역 변수입니다.
+  Mode.c
+C:\Users\USER-PC\source\repos\OSSW_Project1\Mode.c(12,5): warning C4013: 'redrawGameBoard'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\Mode.c(48,2): warning C4013: 'drawRect'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\Mode.c(49,2): warning C4013: 'printTitle'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\Mode.c(55,4): warning C4013: 'printTitle2'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\Mode.c(60,2): warning C4013: 'SetCurrentCursorPos'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+  Shift.c
+C:\Users\USER-PC\source\repos\OSSW_Project1\Shift.c(6,8): warning C4013: 'DetectCollision'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\Shift.c(13,2): warning C4013: 'SetCurrentCursorPos'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\Shift.c(20,3): warning C4013: 'spear_wear'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+  Time.c
+C:\Users\USER-PC\source\repos\OSSW_Project1\Time.c(5,2): warning C4013: 'SetCurrentCursorPos'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\Time.c(24,2): warning C4013: 'drawRect'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+  Virus.c
+C:\Users\USER-PC\source\repos\OSSW_Project1\Virus.c(5,9): warning C4101: 'j' :참조되지 않은 지역 변수입니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\Virus.c(69,5): warning C4013: 'SetCurrentCursorPos'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+  코드를 생성하고 있습니다...
+  LINK : C:\Users\USER-PC\source\repos\OSSW_Project1\x64\Debug\OSSW_Project1.exe을(를) 찾을 수 없거나 마지막 증분 링크에 의해 빌드되지 않았습니다. 전체 링크를 수행하고 있습니다.
   OSSW_Project1.vcxproj -> C:\Users\USER-PC\source\repos\OSSW_Project1\x64\Debug\OSSW_Project1.exe

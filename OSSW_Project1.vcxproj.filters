@@ -18,9 +18,45 @@
     <ClCompile Include="main.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Create.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Cursor.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Human.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Life.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Mode.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Shift.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Time.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Virus.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="title.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="MyHeader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="data.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
