@@ -1,15 +1,17 @@
-#include <stdio.h>
+Ôªø#include <stdio.h>
 #include <windows.h>
 #include <time.h>
 #include <conio.h>
 #include "title.h"
 #include <math.h>
 
-#define COL				GetStdHandle(STD_OUTPUT_HANDLE)
-#define RED				SetConsoleTextAttribute(COL, 0x000c);
-
-#define GBOARD_WIDTH 50
+#define GBOARD_WIDTH 100
 #define GBOARD_HEIGHT 30
+
+#define COL				GetStdHandle(STD_OUTPUT_HANDLE)
+#define BLACK			SetConsoleTextAttribute(COL, 0x0000);
+#define WHITE			SetConsoleTextAttribute(COL, 0x0007);
+#define RED				SetConsoleTextAttribute(COL, 0x000c);
 #define GREEN			SetConsoleTextAttribute(COL, 0x0002);
 #define BLUE_GREEN		SetConsoleTextAttribute(COL, 0x0003);
 #define LIGHT_WHITE		SetConsoleTextAttribute(COL, 0x000f);
@@ -71,6 +73,7 @@ VirusSquare virusSquare[200];
 struct game_util {
 	int score;
 	int life;
+	int* heart;
 };
 
 struct game_util game_util;
@@ -80,11 +83,43 @@ void SetCurrentCursorPos(int x, int y)
 	COORD pos = { x, y };
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 }
-//∫∏µÂ∆« ≥ª∫Œ ¡ˆøÏ±‚
+
+//ÏÇ¨Í∞ÅÌòï Í∑∏Î¶¨Í∏∞
+void drawRect(int posX, int posY, int width, int height) {
+
+	int x, y;
+	for (y = 0; y < height; y++) {
+		SetCurrentCursorPos(posX, posY + y);
+		if (y == 0)
+			printf("‚îè");
+		else if (y == height - 1)
+			printf("‚îó");
+		else
+			printf("‚îÉ");
+	}
+	for (y = 0; y < height; y++) {
+		SetCurrentCursorPos(posX + width - 2, posY + y);
+		if (y == 0)
+			printf("‚îì");
+		else if (y == height - 1)
+			printf("‚îõ");
+		else
+			printf("‚îÉ");
+	}
+	for (x = 2; x < width - 2; x++) {
+		SetCurrentCursorPos(posX + x, posY);
+		printf("‚îÅ");
+	}
+	for (x = 2; x < width - 2; x++) {
+		SetCurrentCursorPos(posX + x, posY + height - 1);
+		printf("‚îÅ");
+	}
+}
+//Î≥¥ÎìúÌåê ÎÇ¥Î∂Ä ÏßÄÏö∞Í∏∞
 void redrawGameBoard() {
 	int x, y;
 	for (y = 1; y < GBOARD_HEIGHT - 1; y++) {
-		for (x = 2; x < GBOARD_WIDTH * 2 - 4; x++) {
+		for (x = 2; x < GBOARD_WIDTH - 4; x++) {
 			SetCurrentCursorPos(x, y);
 			printf("  ");
 		}
@@ -94,7 +129,7 @@ void redrawGameBoard() {
 	curPosY = 0;
 	SetCurrentCursorPos(GBOARD_WIDTH, 0);
 }
-//∏µÂ º±≈√ ¿‘∑¬ πﬁ±‚
+//Î™®Îìú ÏÑ†ÌÉù ÏûÖÎ†• Î∞õÍ∏∞
 void modeKeyInput() {
 	int key;
 	while (1) {
@@ -134,92 +169,26 @@ void modeKeyInput() {
 			break;
 	}
 }
-//∏µÂ º±≈√ πˆ∆∞
-void drawModeButton(int posX) {
-	int x, y;
-	int width = 14;
-	int height = 20;
-
-	for (y = 0; y <= 4; y++) {
-		SetCurrentCursorPos(posX, height + y);
-		if (y == 0)
-			printf("¶Æ");
-		else if (y == 4)
-			printf("¶±");
-		else
-			printf("¶≠");
-	}
-	for (y = 0; y <= 4; y++) {
-		SetCurrentCursorPos(width + posX, height + y);
-		if (y == 0)
-			printf("¶Ø");
-		else if (y == 4)
-			printf("¶∞");
-		else
-			printf("¶≠");
-	}
-	for (x = posX + 2; x < width + posX; x++) {
-		SetCurrentCursorPos(x, height);
-		printf("¶¨");
-	}
-	for (x = posX + 2; x < width + posX; x++) {
-		SetCurrentCursorPos(x, height + 4);
-		printf("¶¨");
-	}
-}
-//∫∏µÂ∆« ±◊∏Æ±‚
-void drawGameBoard() {
-	int x, y;
-	for (y = 0; y < GBOARD_HEIGHT; y++) {
-		SetCurrentCursorPos(0, y);
-		if (y == 0)
-			printf("¶Æ");
-		else if (y == GBOARD_HEIGHT - 1)
-			printf("¶±");
-		else
-			printf("¶≠");
-	}
-	for (y = 0; y < GBOARD_HEIGHT; y++) {
-		SetCurrentCursorPos(GBOARD_WIDTH * 2 - 2, y);
-		if (y == 0)
-			printf("¶Ø");
-		else if (y == GBOARD_HEIGHT - 1)
-			printf("¶∞");
-		else
-			printf("¶≠");
-	}
-	for (x = 2; x < GBOARD_WIDTH * 2 - 2; x++) {
-		SetCurrentCursorPos(x, 0);
-		printf("¶¨");
-	}
-	for (x = 2; x < GBOARD_WIDTH * 2 - 2; x++) {
-		SetCurrentCursorPos(x, GBOARD_HEIGHT - 1);
-		printf("¶¨");
-	}
-
-	curPosX = GBOARD_WIDTH;
-	curPosY = 0;
-	SetCurrentCursorPos(GBOARD_WIDTH, 0);
-}
-//"SELECT MODE" √‚∑¬
+//"SELECT MODE" Ï∂úÎ†•
 void printTitle2() {
 	int x = 0, y = 4;
-	//print select
-	for (int k = 0; k < 6; k++) {
-		for (int i = 0; i < 4; i++) {
-			x = (k * 4) * 2 + i * 2 + 27;
-			for (int j = 0; j < 5; j++) {
-				SetCurrentCursorPos(x, y + j);
-				if (title2[k][j][i] == 1) {
-					YELLOW printf("°·");
+	YELLOW
+		//print select
+		for (int k = 0; k < 6; k++) {
+			for (int i = 0; i < 4; i++) {
+				x = (k * 4) * 2 + i * 2 + 27;
+				for (int j = 0; j < 5; j++) {
+					SetCurrentCursorPos(x, y + j);
+					if (title2[k][j][i] == 1) {
+						printf("‚ñ†");
+					}
+					else
+						printf("  ");
 				}
-				else
-					printf("  ");
+				printf("\n");
 			}
 			printf("\n");
 		}
-		printf("\n");
-	}
 	//print mode
 	y = 12;
 	for (int k = 0; k < 6; k++) {
@@ -228,7 +197,7 @@ void printTitle2() {
 			for (int j = 0; j < 5; j++) {
 				SetCurrentCursorPos(x, y + j);
 				if (title3[k][j][i] == 1)
-					printf("°·");
+					printf("‚ñ†");
 
 				else
 					printf("  ");
@@ -238,7 +207,7 @@ void printTitle2() {
 		printf("\n");
 	}
 }
-//"RIP COVID" √‚∑¬
+//"RIP COVID" Ï∂úÎ†•
 void printTitle1() {
 	int x = 0, y = 9;
 
@@ -248,7 +217,7 @@ void printTitle1() {
 			for (int j = 0; j < 5; j++) {
 				SetCurrentCursorPos(x, y + j);
 				if (title[k][j][i] == 1)
-					printf("°·");
+					printf("‚ñ†");
 				else
 					printf("  ");
 			}
@@ -268,9 +237,11 @@ void removeCursor(void)
 	curInfo.bVisible = 0;
 	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &curInfo);
 }
-//∏µÂ º±≈√
+//Î™®Îìú ÏÑ†ÌÉù
 void selectMode() {
 	int key;
+
+	drawRect(0, 0, GBOARD_WIDTH, GBOARD_HEIGHT);
 	printTitle1();
 
 	while (1) {
@@ -283,31 +254,31 @@ void selectMode() {
 	}
 
 	//classic mode button
-	drawModeButton(5);
+	drawRect(5, 20, 16, 5);
 	SetCurrentCursorPos(10, 21);
 	printf("Classic");
 	SetCurrentCursorPos(11, 23);
 	printf("Mode");
 	//item mode button
-	drawModeButton(23);
+	drawRect(23, 20, 16, 5);
 	SetCurrentCursorPos(29, 21);
 	printf("Item");
 	SetCurrentCursorPos(29, 23);
 	printf("Mode");
 	// invisible mode button
-	drawModeButton(41);
+	drawRect(41, 20, 16, 5);
 	SetCurrentCursorPos(45, 21);
 	printf("Invisible");
 	SetCurrentCursorPos(47, 23);
 	printf("Mode");
 	//hell mode button
-	drawModeButton(59);
+	drawRect(59, 20, 16, 5);
 	SetCurrentCursorPos(65, 21);
 	printf("Hell");
 	SetCurrentCursorPos(65, 23);
 	printf("Mode");
 	//final mode button
-	drawModeButton(78);
+	drawRect(78, 20, 16, 5);
 	SetCurrentCursorPos(84, 21);
 	printf("Final");
 	SetCurrentCursorPos(84, 23);
@@ -317,16 +288,38 @@ void selectMode() {
 	curPosY = 0;
 	SetCurrentCursorPos(GBOARD_WIDTH, 0);
 
-	//∏µÂ º±≈√«œ¥¬ ¿‘∑¬ ≈∞ πﬁ±‚
+	//Î™®Îìú ÏÑ†ÌÉùÌïòÎäî ÏûÖÎ†• ÌÇ§ Î∞õÍ∏∞
 	modeKeyInput();
 }
-//¿Œ∞£ ª˝º∫
+//Î™©Ïà® ÏóÖÎç∞Ïù¥Ìä∏
+void updateLife() {
+
+	SetCurrentCursorPos(104, 5);
+	for (int i = 1; i <= 5; i++) {
+		if (i <= game_util.life)
+			RED
+		else
+			WHITE
+			printf(" ‚ô• ");
+	}
+	WHITE
+}
+//Î™©Ïà® ÏÉùÏÑ±
+void createLife() {
+
+	drawRect(101, 4, 27, 3);
+	game_util.life = 5;
+	game_util.heart = (int*)calloc(5, sizeof(int));
+
+	updateLife();
+}
+//Ïù∏Í∞Ñ ÏÉùÏÑ±
 void createHuman() {
 
 	SetCurrentCursorPos(humanCurPosX, humanCurPosY);
 	printf("@");
 }
-//πŸ¿Ã∑ØΩ∫ ª˝º∫
+//Î∞îÏù¥Îü¨Ïä§ ÏÉùÏÑ±
 void createVirus() {
 
 	virus = (Virus*)malloc(5 * sizeof(Virus));
@@ -343,8 +336,6 @@ void createVirus() {
 
 void createVirusOneby() {
 
-
-
 	srand((unsigned int)time(NULL));
 
 	virusOneby[v_num].x = rand() % 97 + 1;
@@ -354,7 +345,6 @@ void createVirusOneby() {
 	printf("*");
 
 	v_num++;
-
 }
 
 void createVirusVertical() {
@@ -372,45 +362,6 @@ void createVirusVertical() {
 
 }
 
-/*
-void createVirusCircle() {
-	int k = 0;
-	virusCircle[0].x = humanCurPosX;
-	virusCircle[0].y = humanCurPosY + 10;
-	virusCircle[1].x = humanCurPosX + 2;
-	virusCircle[1].y = humanCurPosY + 10;
-	virusCircle[2].x = humanCurPosX - 2;
-	virusCircle[2].y = humanCurPosY + 10; //6
-	virusCircle[3].x = humanCurPosX + 10;
-	virusCircle[3].y = humanCurPosY + 9;
-	virusCircle[4].x = humanCurPosX - 10;
-	virusCircle[4].y = humanCurPosY + 9; //5
-	virusCircle[5].x = humanCurPosX + 18;
-	virusCircle[5].y = humanCurPosY;
-	virusCircle[6].x = humanCurPosX - 18;
-	virusCircle[6].y = humanCurPosY; //4
-	virusCircle[7].x = humanCurPosX;
-	virusCircle[7].y = humanCurPosY - 10;
-	virusCircle[8].x = humanCurPosX;
-	virusCircle[8].y = humanCurPosY - 10; //3
-	virusCircle[9].x = humanCurPosX + 4;
-	virusCircle[9].y = humanCurPosY + 2;
-	virusCircle[10].x = humanCurPosX - 4;
-	virusCircle[10].y = humanCurPosY + 2; //2
-	virusCircle[11].x = humanCurPosX + 4;
-	virusCircle[11].y = humanCurPosY + 1;
-	virusCircle[12].x = humanCurPosX - 4;
-	virusCircle[12].y = humanCurPosY + 1; //1
-	virusCircle[13].x = humanCurPosX + 4;
-	virusCircle[13].y = humanCurPosY + 0;
-	virusCircle[14].x = humanCurPosX - 4;
-	virusCircle[14].y = humanCurPosY + 0; //0
-	for (int i = 0; i <= 8; i++) {
-		SetCurrentCursorPos(virusCircle[i].x, virusCircle[i].y);
-		printf("*");
-	}
-}
-*/
 void createVirusSquare() {
 
 	int i, k = 0;
@@ -480,7 +431,7 @@ void createVirusSquare() {
 }
 
 
-//πŸ¿Ã∑ØΩ∫ √Êµπ ∞ÀªÁ
+//Î∞îÏù¥Îü¨Ïä§ Ï∂©Îèå Í≤ÄÏÇ¨
 int DetectCollisionV() {
 	int i, j;
 
@@ -498,10 +449,10 @@ int DetectCollisionV() {
 	return 1;
 }
 
-//√Êµπ ∞ÀªÁ
+//Ï∂©Îèå Í≤ÄÏÇ¨
 int DetectCollision(int posX, int posY) {
 
-	if (posX == 1 || posX == GBOARD_WIDTH * 2 - 2 || posY == 0 || posY == GBOARD_HEIGHT - 1)
+	if (posX == 1 || posX == GBOARD_WIDTH - 2 || posY == 0 || posY == GBOARD_HEIGHT - 1)
 		return 0;
 
 	return 1;
@@ -551,7 +502,7 @@ void ShiftDown(void) {
 	SetCurrentCursorPos(humanCurPosX, humanCurPosY);
 	printf("@");
 }
-//√ﬂ¿˚ πŸ¿Ã∑ØΩ∫
+//Ï∂îÏ†Å Î∞îÏù¥Îü¨Ïä§
 void trackingVirus() {
 
 	for (int i = 0; i < 5; i++) {
@@ -596,8 +547,6 @@ void trackingVirus() {
 		SetCurrentCursorPos(virus[i].x, virus[i].y);
 		printf("*");
 	}
-
-
 }
 
 void trackingVirusOneby() {
@@ -643,12 +592,10 @@ void trackingVirusOneby() {
 
 		SetCurrentCursorPos(virusOneby[i].x, virusOneby[i].y);
 		printf("*");
-
-
 	}
-
 	vertical_num++;
 }
+
 void trackingVirusVertical() {
 
 	for (int i = 0; i < GBOARD_HEIGHT - 2; i++) {
@@ -660,11 +607,10 @@ void trackingVirusVertical() {
 
 		SetCurrentCursorPos(virusVertical[i].x, virusVertical[i].y);
 		printf("*");
-
 	}
 }
 
-//¿Œ∞£ ¿Ãµø
+//Ïù∏Í∞Ñ Ïù¥Îèô
 void moveHuman() {
 	int key;
 
@@ -691,22 +637,18 @@ void moveHuman() {
 
 int main() {
 	int i, j, num_cnt = 0;
-	game_util.life = 5;
 	int check = 0;
 	int vertical_cnt = 0;
 	int circle_cnt = 0;
 
-	//system("mode con:cols=100 lines=30");   // cols: ∞°∑Œ, lines: ºº∑Œ
+	system("mode con:cols=130 lines=30");   // cols: Í∞ÄÎ°ú, lines: ÏÑ∏Î°ú
 	removeCursor();
-	drawGameBoard();
 	selectMode();
-
-	SetCurrentCursorPos(GBOARD_WIDTH * 2, 10);
-	printf("%d", game_util.life);
+	WHITE
+		createLife();
 
 	createHuman();
 	createVirus();
-
 
 	for (i = 1;; i++) {
 
@@ -747,18 +689,17 @@ int main() {
 
 		check = DetectCollisionV();
 		if (check == 2) {
+			game_util.life = --game_util.life;
+			updateLife();
 			SetCurrentCursorPos(humanCurPosX, humanCurPosY);
-			game_util.life = game_util.life - 1;
-			RED printf("°˚\a");
-			SetCurrentCursorPos(GBOARD_WIDTH * 2, 10);
-			printf("%d", game_util.life);
+			RED printf("‚à©\a");
 
-			Sleep(10000);
+			Sleep(1000);
 		}
-		
 
 		if (check == 2) {
-			SetCurrentCursorPos(humanCurPosX, humanCurPosY);
+			WHITE
+				SetCurrentCursorPos(humanCurPosX, humanCurPosY);
 			printf("  ");
 			createHuman();
 			check = 0;
