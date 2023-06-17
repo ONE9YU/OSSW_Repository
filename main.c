@@ -10,6 +10,7 @@
 
 #define COL				GetStdHandle(STD_OUTPUT_HANDLE)
 #define BLACK			SetConsoleTextAttribute(COL, 0x0000);
+#define DARK_RED		SetConsoleTextAttribute(COL, 0x0004);
 #define WHITE			SetConsoleTextAttribute(COL, 0x0007);
 #define RED				SetConsoleTextAttribute(COL, 0x000c);
 #define GREEN			SetConsoleTextAttribute(COL, 0x0002);
@@ -55,6 +56,7 @@ typedef struct VirusOneby {
 typedef struct VirusVertical {
 	int x;
 	int y;
+	int visible;
 }VirusVertical;
 
 typedef struct VirusCircle {
@@ -233,6 +235,38 @@ void printTitle1() {
 	printf("Press Any Key to Start");
 }
 
+void printGameOver() {
+	int x = 0, y = 5;
+	for (int k = 0; k < 8; k++) {
+		for (int i = 0; i < 5; i++) {
+			if (k < 4)
+				x = (k * 5) * 2 + i * 2 + 22;
+			else {
+				x = ((k - 4) * 5) * 2 + i * 2 + 23;
+				y = 11;
+			}
+
+			for (int j = 0; j < 5; j++) {
+				SetCurrentCursorPos(x, y + j);
+
+				if (gameOver[k][j][i] == 1)
+					printf("■");
+				else
+					printf("  ");
+			}
+			printf("\n");
+		}
+		printf("\n");
+	}
+}
+
+void GameOver() {
+	DARK_RED
+		drawRect(0, 0, GBOARD_WIDTH, GBOARD_HEIGHT);
+	redrawGameBoard();
+	printGameOver();
+}
+
 void removeCursor(void)
 {
 	CONSOLE_CURSOR_INFO curInfo;
@@ -256,35 +290,38 @@ void selectMode() {
 		}
 	}
 
+	SetCurrentCursorPos(38, 19);
+	printf("Press The Number Key...");
+
 	//classic mode button
-	drawRect(5, 20, 16, 5);
-	SetCurrentCursorPos(10, 21);
-	printf("Classic");
-	SetCurrentCursorPos(11, 23);
+	drawRect(5, 22, 16, 5);
+	SetCurrentCursorPos(9, 23);
+	printf("1.Classic");
+	SetCurrentCursorPos(11, 25);
 	printf("Mode");
 	//item mode button
-	drawRect(23, 20, 16, 5);
-	SetCurrentCursorPos(29, 21);
-	printf("Item");
-	SetCurrentCursorPos(29, 23);
+	drawRect(23, 22, 16, 5);
+	SetCurrentCursorPos(28, 23);
+	printf("2.Item");
+	SetCurrentCursorPos(29, 25);
 	printf("Mode");
 	// invisible mode button
-	drawRect(41, 20, 16, 5);
-	SetCurrentCursorPos(45, 21);
-	printf("Invisible");
-	SetCurrentCursorPos(47, 23);
+	drawRect(41, 22, 16, 5);
+	SetCurrentCursorPos(44, 23);
+	printf("3.Invisible");
+	SetCurrentCursorPos(47, 25);
 	printf("Mode");
 	//hell mode button
-	drawRect(59, 20, 16, 5);
-	SetCurrentCursorPos(65, 21);
-	printf("Hell");
-	SetCurrentCursorPos(65, 23);
+	drawRect(59, 22, 16, 5);
+	SetCurrentCursorPos(64, 23);
+	printf("4.Hell");
+	SetCurrentCursorPos(65, 25);
 	printf("Mode");
 	//final mode button
-	drawRect(78, 20, 16, 5);
-	SetCurrentCursorPos(84, 21);
-	printf("Final");
-	SetCurrentCursorPos(84, 23);
+	drawRect(78, 22, 16, 5);
+	SetCurrentCursorPos(83, 23);
+	printf("5.Final");
+	SetCurrentCursorPos(84, 25);
 	printf("Mode");
 
 	curPosX = GBOARD_WIDTH;
@@ -377,15 +414,35 @@ void createVirusOneby() {
 }
 
 void createVirusVertical() {
-	int i;
+	RED
+		int r[4];
+	srand((unsigned int)time(NULL));
 
-	for (i = 0; i < GBOARD_HEIGHT - 2; i++) {
+	for (int i = 0; i < 4; i++)
+		r[i] = rand() % 30;
+
+	for (int i = 0; i < GBOARD_HEIGHT - 2; i++) {
+		int flag = 0;
+		for (int j = 0; j < 4; j++) {
+			if (r[j] == i) {
+				virusVertical[i].visible = 0;
+				virusVertical[i].x = -1;
+				virusVertical[i].y = -1;
+				flag = 1;
+				break;
+			}
+		}
+		if (flag == 1)
+			continue;
+
 		virusVertical[i].x = 2;
 		virusVertical[i].y = 1 + i;
 
 		SetCurrentCursorPos(virusVertical[i].x, virusVertical[i].y);
 		printf("*");
+		virusVertical[i].visible = 1;
 	}
+	WHITE
 }
 
 void createVirusSquare() {
@@ -468,13 +525,19 @@ int DetectCollisionV() {
 			return 2;
 		}
 	}
+
+	for (i = 0; i < GBOARD_HEIGHT - 2; i++) {
+		if (virusVertical[i].x == humanCurPosX && virusVertical[i].y == humanCurPosY) {
+			return 2;
+		}
+	}
 	return 1;
 }
 
 //충돌 검사
 int DetectCollision(int posX, int posY) {
 
-	if (posX == 1 || posX + 1 > GBOARD_WIDTH - 4 || posY == 0 || posY == GBOARD_HEIGHT - 1)
+	if (posX == 1 || posX + 1 > GBOARD_WIDTH - 3 || posY == 0 || posY == GBOARD_HEIGHT - 1)
 		return 0;
 
 	return 1;
@@ -633,15 +696,16 @@ void trackingVirusVertical() {
 	}
 
 	for (int i = 0; i < GBOARD_HEIGHT - 2; i++) {
-
-		SetCurrentCursorPos(virusVertical[i].x, virusVertical[i].y);
-		printf(" ");
-
-		virusVertical[i].x++;
-
-		RED
+		if (virusVertical[i].visible == 1) {
 			SetCurrentCursorPos(virusVertical[i].x, virusVertical[i].y);
-		printf("*");
+			printf(" ");
+
+			virusVertical[i].x++;
+
+			RED
+				SetCurrentCursorPos(virusVertical[i].x, virusVertical[i].y);
+			printf("*");
+		}
 	}
 	WHITE
 }
@@ -718,7 +782,7 @@ int main() {
 			RED printf("∩\a");
 
 			if (game_util.life == 0) {
-				redrawGameBoard();
+				GameOver();
 				break;
 			}
 			Sleep(500);
