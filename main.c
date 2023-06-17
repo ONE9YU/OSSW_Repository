@@ -29,6 +29,9 @@
 #define UP 72
 #define DOWN 80
 
+clock_t start_time;
+clock_t end_time;
+
 int curPosX, curPosY;
 int humanCurPosX = 50, humanCurPosY = 15;
 int virusCurPosX, virusCurPosY;
@@ -313,6 +316,28 @@ void createLife() {
 
 	updateLife();
 }
+//시간 업데이트
+void updateTime() {
+	SetCurrentCursorPos(110, 1);
+	int min = (int)(end_time - start_time) / CLOCKS_PER_SEC / 60;
+	int sec = (int)(end_time - start_time) / CLOCKS_PER_SEC % 60;
+
+	if (min < 10 && sec < 10)
+		printf("0%d  :  0%d", min, sec);
+
+	else if (min < 10 && sec >= 10)
+		printf("0%d  :  %d", min, sec);
+
+	else if (min >= 10 && sec < 10)
+		printf("%d  :  0%d", min, sec);
+
+	else
+		printf("%d  :  %d", min, sec);
+}
+//시간 생성
+void createTime() {
+	drawRect(101, 0, 27, 3);
+}
 //인간 생성
 void createHuman() {
 
@@ -322,7 +347,8 @@ void createHuman() {
 //바이러스 생성
 void createVirus() {
 
-	virus = (Virus*)malloc(5 * sizeof(Virus));
+	RED
+		virus = (Virus*)malloc(5 * sizeof(Virus));
 
 	srand((unsigned int)time(NULL));
 
@@ -332,11 +358,13 @@ void createVirus() {
 		SetCurrentCursorPos(virus[i].x, virus[i].y);
 		printf("*");
 	}
+	WHITE
 }
 
 void createVirusOneby() {
 
-	srand((unsigned int)time(NULL));
+	RED
+		srand((unsigned int)time(NULL));
 
 	virusOneby[v_num].x = rand() % 97 + 1;
 	virusOneby[v_num].y = rand() % 28 + 1;
@@ -345,6 +373,7 @@ void createVirusOneby() {
 	printf("*");
 
 	v_num++;
+	WHITE
 }
 
 void createVirusVertical() {
@@ -356,10 +385,7 @@ void createVirusVertical() {
 
 		SetCurrentCursorPos(virusVertical[i].x, virusVertical[i].y);
 		printf("*");
-
 	}
-
-
 }
 
 void createVirusSquare() {
@@ -425,11 +451,8 @@ void createVirusSquare() {
 	for (int i = 0; i < 112; i++) {
 		SetCurrentCursorPos(virusSquare[i].x, virusSquare[i].y);
 		printf("*");
-
 	}
-
 }
-
 
 //바이러스 충돌 검사
 int DetectCollisionV() {
@@ -445,14 +468,13 @@ int DetectCollisionV() {
 			return 2;
 		}
 	}
-
 	return 1;
 }
 
 //충돌 검사
 int DetectCollision(int posX, int posY) {
 
-	if (posX == 1 || posX == GBOARD_WIDTH - 2 || posY == 0 || posY == GBOARD_HEIGHT - 1)
+	if (posX == 1 || posX + 1 > GBOARD_WIDTH - 4 || posY == 0 || posY == GBOARD_HEIGHT - 1)
 		return 0;
 
 	return 1;
@@ -544,9 +566,11 @@ void trackingVirus() {
 			virus[i].y++;
 		}
 
-		SetCurrentCursorPos(virus[i].x, virus[i].y);
+		RED
+			SetCurrentCursorPos(virus[i].x, virus[i].y);
 		printf("*");
 	}
+	WHITE
 }
 
 void trackingVirusOneby() {
@@ -590,13 +614,23 @@ void trackingVirusOneby() {
 			virusOneby[i].y++;
 		}
 
-		SetCurrentCursorPos(virusOneby[i].x, virusOneby[i].y);
+		RED
+			SetCurrentCursorPos(virusOneby[i].x, virusOneby[i].y);
 		printf("*");
 	}
 	vertical_num++;
+	WHITE
 }
 
 void trackingVirusVertical() {
+
+	if (virusVertical[0].x + 4 > GBOARD_WIDTH) {
+		for (int i = 0; i < GBOARD_HEIGHT - 2; i++) {
+			SetCurrentCursorPos(virusVertical[i].x, virusVertical[i].y);
+			printf(" ");
+		}
+		return;
+	}
 
 	for (int i = 0; i < GBOARD_HEIGHT - 2; i++) {
 
@@ -605,11 +639,12 @@ void trackingVirusVertical() {
 
 		virusVertical[i].x++;
 
-		SetCurrentCursorPos(virusVertical[i].x, virusVertical[i].y);
+		RED
+			SetCurrentCursorPos(virusVertical[i].x, virusVertical[i].y);
 		printf("*");
 	}
+	WHITE
 }
-
 //인간 이동
 void moveHuman() {
 	int key;
@@ -645,47 +680,35 @@ int main() {
 	removeCursor();
 	selectMode();
 	WHITE
-		createLife();
+		start_time = clock();
+	createTime();
+	createLife();
 
 	createHuman();
 	createVirus();
 
-	for (i = 1;; i++) {
-
-
-		if (_kbhit())
-			moveHuman();
-
-		Sleep(100);
+	while (1) {
+		int i = 1;
 
 		if (_kbhit())
 			moveHuman();
 
-		if (i % 100 == 0)
-		{
+		Sleep(200);
+
+		if (_kbhit())
+			moveHuman();
+
+		if (i % 100 == 0) {
 			num_cnt++;
 		}
-
-		if (_kbhit())
-			moveHuman();
 
 		for (j = 0; j <= num_cnt; j++)
 		{
 			createVirusOneby();
 		}
 
-		if (_kbhit())
-			moveHuman();
-
 		trackingVirus();
-
-		if (_kbhit())
-			moveHuman();
-
 		trackingVirusOneby();
-
-		if (_kbhit())
-			moveHuman();
 
 		check = DetectCollisionV();
 		if (check == 2) {
@@ -694,7 +717,13 @@ int main() {
 			SetCurrentCursorPos(humanCurPosX, humanCurPosY);
 			RED printf("∩\a");
 
-			Sleep(1000);
+			if (game_util.life == 0) {
+				redrawGameBoard();
+				break;
+			}
+			Sleep(500);
+			updateTime();
+			Sleep(500);
 		}
 
 		if (check == 2) {
@@ -704,9 +733,6 @@ int main() {
 			createHuman();
 			check = 0;
 		}
-
-		if (_kbhit())
-			moveHuman();
 
 		if (vertical_num == 10) {
 			createVirusVertical();
@@ -720,11 +746,11 @@ int main() {
 		}
 
 		Sleep(100);
-
-		if (_kbhit())
-			moveHuman();
-
+		i++;
+		end_time = clock();
+		updateTime();
 	}
+
 	getchar();
 	return 0;
 }
