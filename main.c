@@ -46,6 +46,7 @@ int v_num = 0;
 int vertical_num = 0;
 int boom_flag = 0;
 int spear_flag = 0;
+int killed_v = 0;
 
 typedef struct Virus {
 	int x;
@@ -110,6 +111,16 @@ typedef struct PreEraser {
 	int y;
 }PreEraser;
 
+typedef struct invisibleMap {
+	int x;
+	int y;
+}InvisibleMap;
+
+typedef struct visibleMap {
+	int x;
+	int y;
+}VisibleMap;
+
 Virus* virus;
 VirusOneby virusOneby[100];
 VirusVertical virusVertical[GBOARD_HEIGHT];
@@ -123,6 +134,9 @@ Boom_ready boom_ready[100];
 Spear_xy spear_xy;
 Spear_ready spear_ready[9];
 PreEraser preEraser[9];
+
+InvisibleMap invisibleMap[3000];
+VisibleMap visibleMap[100];
 
 struct game_util {
 	int score;
@@ -433,6 +447,10 @@ void createTime() {
 }
 //점수 생성
 void createScore() {
+
+
+	game_util.score = killed_v * 50;
+
 	SetCurrentCursorPos(GBOARD_WIDTH, GBOARD_HEIGHT - 20);
 	printf("score : %d", game_util.score);
 }
@@ -672,7 +690,7 @@ void pre_remove() {
 
 void spear_wear() {
 
-	int x, y, k;
+	int x, y, k, w;
 	int i = 0, j = 0;
 
 	x = humanCurPosX - 2;
@@ -706,7 +724,17 @@ void spear_wear() {
 	SetCurrentCursorPos(spear_ready[4].x, spear_ready[4].y);
 	printf("@");
 
-
+	for (k = 0; k < 9; k++) {
+		for (w = 0; w < 5; w++) {
+			if (spear_ready[k].x == virus[w].x && spear_ready[k].y == virus[w].y) {
+				virus[w].x = 1000;
+				virus[w].y = 1000;
+				virus[w].killed_flag = 1;
+				killed_v++;
+				createScore();
+			}
+		}
+	}
 
 
 
@@ -732,8 +760,7 @@ void spear_item() {
 
 		if (spear_xy.x == humanCurPosX && spear_xy.y == humanCurPosY) {
 			spear_xy.get_check = 1;
-			SetCurrentCursorPos(spear_xy.x, spear_xy.y);
-			printf(" ");
+
 
 			spear_wear();
 
@@ -1026,17 +1053,14 @@ void boom_shoot() {
 				virus[a].x = 1000;
 				virus[a].y = 1000;
 				virus[a].killed_flag = 1;
+				killed_v++;
+				createScore();
 			}
 		}
 
 	}
 
-	for (a = 0; a < 5; a++) {
-		if (virus[a].x == 1000 && virus[a].y == 1000) {
-			game_util.score += 5;
-			createScore();
-		}
-	}
+
 
 	for (k = 0; k < 36; k++) {
 
@@ -1082,7 +1106,36 @@ void boom_item() {
 	}
 }
 
+//인비저블 모드
+void invisiblemode() {
+	int i = 1, j = 1, k;
+	int x, y;
+	int cnt = 0;
 
+	for (k = 0; k < (GBOARD_HEIGHT / 2) * GBOARD_WIDTH; k++) {
+		invisibleMap[k].x = i * 2;
+		invisibleMap[k].y = j;
+
+		i++;
+
+		if (i % ((GBOARD_WIDTH / 2) - 1) == 0) {
+			j++;
+			i = 1;
+		}
+
+		cnt++;
+		if (j == 29) break;
+
+
+	}
+
+	for (k = 0; k < cnt; k++) {
+		SetCurrentCursorPos(invisibleMap[k].x, invisibleMap[k].y);
+		printf("■");
+	}
+
+
+}
 
 
 int main() {
@@ -1112,6 +1165,8 @@ int main() {
 	while (1) {
 		int i = 1;
 
+		//invisiblemode();
+
 		if (_kbhit())
 			moveHuman();
 
@@ -1126,11 +1181,11 @@ int main() {
 
 		for (j = 0; j <= num_cnt; j++)
 		{
-			createVirusOneby();
+			//createVirusOneby();
 		}
 
 		trackingVirus();
-		trackingVirusOneby();
+		//trackingVirusOneby();
 
 
 
@@ -1161,16 +1216,16 @@ int main() {
 
 
 		if (vertical_num == 10) {
-			createVirusHorizontal();
-			createVirusVertical();
+			//createVirusHorizontal();
+			//createVirusVertical();
 			//createVirusCircle();
 			//createVirusSquare();
 			vertical_cnt++;
 		}
 
 		if (vertical_cnt >= 1) {
-			trackingVirusVertical();
-			trackingVirusHorizontal();
+			//trackingVirusVertical();
+			//trackingVirusHorizontal();
 
 		}
 

@@ -1,7 +1,9 @@
 ﻿  main.c
-C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(602,9): warning C4101: 'j' :참조되지 않은 지역 변수입니다.
-C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(991,9): warning C4101: 'b' :참조되지 않은 지역 변수입니다.
-C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(991,12): warning C4101: 'c' :참조되지 않은 지역 변수입니다.
-C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(991,15): warning C4101: 'd' :참조되지 않은 지역 변수입니다.
-C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(1092,6): warning C4101: 'i' :참조되지 않은 지역 변수입니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(620,9): warning C4101: 'j' :참조되지 않은 지역 변수입니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(1018,9): warning C4101: 'b' :참조되지 않은 지역 변수입니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(1018,12): warning C4101: 'c' :참조되지 않은 지역 변수입니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(1018,15): warning C4101: 'd' :참조되지 않은 지역 변수입니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(1112,9): warning C4101: 'y' :참조되지 않은 지역 변수입니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(1112,6): warning C4101: 'x' :참조되지 않은 지역 변수입니다.
+C:\Users\USER-PC\source\repos\OSSW_Project1\main.c(1145,6): warning C4101: 'i' :참조되지 않은 지역 변수입니다.
   OSSW_Project1.vcxproj -> C:\Users\USER-PC\source\repos\OSSW_Project1\x64\Debug\OSSW_Project1.exe
