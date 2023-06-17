@@ -759,6 +759,9 @@ int main() {
 			vertical_cnt++;
 		}
 
+		if (_kbhit())
+			moveHuman();
+
 		if (vertical_cnt >= 1) {
 			trackingVirusVertical();
 		}
