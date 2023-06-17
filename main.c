@@ -163,5 +163,8 @@ int main() {
 
 	getchar();
 
+	if (_kbhit())
+		moveHuman();
+
 	return 0;
 }
