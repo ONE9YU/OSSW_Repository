@@ -79,6 +79,9 @@ int main() {
 	createHuman();
 	createVirus();
 
+	if (_kbhit())
+		moveHuman();
+
 	while (1) {
 		int i = 1;
 
