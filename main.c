@@ -28,7 +28,7 @@
 #define DOWN 80
 
 int curPosX, curPosY;
-int humanCurPosX, humanCurPosY;
+int humanCurPosX = 50, humanCurPosY = 15;
 int virusCurPosX, virusCurPosY;
 int mode;
 int next = 0;
@@ -323,8 +323,6 @@ void selectMode() {
 //인간 생성
 void createHuman() {
 
-	humanCurPosX = 50;
-	humanCurPosY = 15;
 	SetCurrentCursorPos(humanCurPosX, humanCurPosY);
 	printf("@");
 }
@@ -482,8 +480,8 @@ void createVirusSquare() {
 }
 
 
-//충돌 검사
-int DetectCollision() {
+//바이러스 충돌 검사
+int DetectCollisionV() {
 	int i, j;
 
 	for (i = 0; i < 10; i++) {
@@ -497,18 +495,22 @@ int DetectCollision() {
 		}
 	}
 
+	return 1;
+}
+
+//충돌 검사
+int DetectCollision(int posX, int posY) {
+
+	if (posX == 1 || posX == GBOARD_WIDTH * 2 - 2 || posY == 0 || posY == GBOARD_HEIGHT - 1)
+		return 0;
 
 	return 1;
-	//if (posX == 1 || posX == GBOARD_WIDTH * 2 - 2 || posY == 0 || posY == GBOARD_HEIGHT - 1)
-	//	return 0;
-
-	//return 1;
 }
 
 void ShiftRight(void) {
 
-	//	if (!DetectCollision(humanCurPosX + 1, humanCurPosY))
-	//		return ;
+	if (!DetectCollision(humanCurPosX + 1, humanCurPosY))
+		return;
 	SetCurrentCursorPos(humanCurPosX, humanCurPosY);
 	printf(" ");
 	humanCurPosX += 2;
@@ -519,8 +521,8 @@ void ShiftRight(void) {
 
 void ShiftLeft(void) {
 
-	//	if (!DetectCollision(humanCurPosX - 1, humanCurPosY))
-	//		return ;
+	if (!DetectCollision(humanCurPosX - 1, humanCurPosY))
+		return;
 	SetCurrentCursorPos(humanCurPosX, humanCurPosY);
 	printf(" ");
 	humanCurPosX -= 2;
@@ -530,8 +532,8 @@ void ShiftLeft(void) {
 
 void ShiftUp(void) {
 
-	//	if (!DetectCollision(humanCurPosX, humanCurPosY - 1))
-	//		return ;
+	if (!DetectCollision(humanCurPosX, humanCurPosY - 1))
+		return;
 	SetCurrentCursorPos(humanCurPosX, humanCurPosY);
 	printf(" ");
 	humanCurPosY -= 1;
@@ -541,9 +543,8 @@ void ShiftUp(void) {
 
 void ShiftDown(void) {
 
-	//	if (!DetectCollision(humanCurPosX, humanCurPosY + 1))
-	//		return ;
-
+	if (!DetectCollision(humanCurPosX, humanCurPosY + 1))
+		return;
 	SetCurrentCursorPos(humanCurPosX, humanCurPosY);
 	printf(" ");
 	humanCurPosY += 1;
@@ -686,9 +687,6 @@ void moveHuman() {
 			}
 		}
 	}
-
-
-
 }
 
 int main() {
@@ -703,9 +701,15 @@ int main() {
 	drawGameBoard();
 	selectMode();
 
+	SetCurrentCursorPos(GBOARD_WIDTH * 2, 10);
+	printf("%d", game_util.life);
+
 	createHuman();
 	createVirus();
+
+
 	for (i = 1;; i++) {
+
 
 		if (_kbhit())
 			moveHuman();
@@ -741,12 +745,23 @@ int main() {
 		if (_kbhit())
 			moveHuman();
 
-		check = DetectCollision();
-		if (check == 2) {
+		check = DetectCollisionV();
+/*		if (check == 2) {
 			SetCurrentCursorPos(humanCurPosX, humanCurPosY);
 			game_util.life = game_util.life - 1;
 			RED printf("∩\a");
+			SetCurrentCursorPos(GBOARD_WIDTH * 2, 10);
+			printf("%d", game_util.life);
+
 			Sleep(10000);
+		}
+		*/
+
+		if (check == 2) {
+			SetCurrentCursorPos(humanCurPosX, humanCurPosY);
+			printf("  ");
+			createHuman();
+			check = 0;
 		}
 
 		if (_kbhit())
