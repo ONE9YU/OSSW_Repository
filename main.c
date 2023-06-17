@@ -768,8 +768,7 @@ int main() {
 
 		Sleep(100);
 
-		if (_kbhit())
-			moveHuman();
+
 
 	}
 	getchar();
