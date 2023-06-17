@@ -127,9 +127,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Create.c" />
+    <ClCompile Include="Cursor.c" />
+    <ClCompile Include="Draw.c" />
+    <ClCompile Include="Human.c" />
+    <ClCompile Include="Item.c" />
+    <ClCompile Include="Life.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="Mode.c" />
+    <ClCompile Include="Shift.c" />
+    <ClCompile Include="Time.c" />
+    <ClCompile Include="Virus.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="data.h" />
+    <ClInclude Include="MyHeader.h" />
     <ClInclude Include="title.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
