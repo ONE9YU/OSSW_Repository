@@ -746,7 +746,7 @@ int main() {
 			moveHuman();
 
 		check = DetectCollisionV();
-/*		if (check == 2) {
+		if (check == 2) {
 			SetCurrentCursorPos(humanCurPosX, humanCurPosY);
 			game_util.life = game_util.life - 1;
 			RED printf("¡û\a");
@@ -755,7 +755,7 @@ int main() {
 
 			Sleep(10000);
 		}
-		*/
+		
 
 		if (check == 2) {
 			SetCurrentCursorPos(humanCurPosX, humanCurPosY);
