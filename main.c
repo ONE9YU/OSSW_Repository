@@ -1229,7 +1229,7 @@ int main() {
 
 		}
 
-		Sleep(100);
+		Sleep(200);
 		i++;
 		end_time = clock();
 		updateTime();
