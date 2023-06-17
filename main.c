@@ -33,6 +33,8 @@
 clock_t start_time;
 clock_t end_time;
 
+int preX = 999, preY = 999;
+
 int curPosX, curPosY;
 int humanCurPosX = 50, humanCurPosY = 15;
 int virusCurPosX, virusCurPosY;
@@ -42,21 +44,27 @@ int curTime;
 
 int v_num = 0;
 int vertical_num = 0;
+int boom_flag = 0;
+int spear_flag = 0;
 
 typedef struct Virus {
 	int x;
 	int y;
+	int killed_flag;
 }Virus;
 
 typedef struct VirusOneby {
 	int x;
 	int y;
+	int killed_flag;
 }VirusOneby;
 
 typedef struct VirusVertical {
 	int x;
 	int y;
 	int visible;
+	int onoff;
+	int killed_flag;
 }VirusVertical;
 
 typedef struct VirusCircle {
@@ -69,11 +77,52 @@ typedef struct VirusSquare {
 	int y;
 }VirusSquare;
 
+typedef struct VirusHorizontal {
+	int x;
+	int y;
+}VirusHorizontal;
+
+typedef struct boom_xy {
+	int x;
+	int y;
+	int get_check;
+
+}Boom_xy;
+
+typedef struct boom_ready {
+	int x;
+	int y;
+}Boom_ready;
+
+typedef struct spear_xy {
+	int x;
+	int y;
+	int get_check;
+}Spear_xy;
+
+typedef struct spear_ready {
+	int x;
+	int y;
+}Spear_ready;
+
+typedef struct PreEraser {
+	int x;
+	int y;
+}PreEraser;
+
 Virus* virus;
 VirusOneby virusOneby[100];
 VirusVertical virusVertical[GBOARD_HEIGHT];
 VirusCircle virusCircle[100];
 VirusSquare virusSquare[200];
+VirusHorizontal virusHorizontal[GBOARD_WIDTH];
+
+Boom_xy boom_xy;
+Boom_ready boom_ready[100];
+
+Spear_xy spear_xy;
+Spear_ready spear_ready[9];
+PreEraser preEraser[9];
 
 struct game_util {
 	int score;
@@ -344,6 +393,13 @@ void updateLife() {
 	}
 	WHITE
 }
+
+
+
+
+
+
+
 //목숨 생성
 void createLife() {
 
@@ -375,6 +431,12 @@ void updateTime() {
 void createTime() {
 	drawRect(101, 0, 27, 3);
 }
+//점수 생성
+void createScore() {
+	SetCurrentCursorPos(GBOARD_WIDTH, GBOARD_HEIGHT - 20);
+	printf("score : %d", game_util.score);
+}
+
 //인간 생성
 void createHuman() {
 
@@ -390,6 +452,8 @@ void createVirus() {
 	srand((unsigned int)time(NULL));
 
 	for (int i = 0; i < 5; i++) {
+		virus[i].killed_flag = 0;
+
 		virus[i].x = rand() % 97 + 1;
 		virus[i].y = rand() % 28 + 1;
 		SetCurrentCursorPos(virus[i].x, virus[i].y);
@@ -402,6 +466,8 @@ void createVirusOneby() {
 
 	RED
 		srand((unsigned int)time(NULL));
+
+	virusOneby[v_num].killed_flag = 0;
 
 	virusOneby[v_num].x = rand() % 97 + 1;
 	virusOneby[v_num].y = rand() % 28 + 1;
@@ -422,6 +488,9 @@ void createVirusVertical() {
 		r[i] = rand() % 30;
 
 	for (int i = 0; i < GBOARD_HEIGHT - 2; i++) {
+
+		virusVertical[i].killed_flag = 0;
+
 		int flag = 0;
 		for (int j = 0; j < 4; j++) {
 			if (r[j] == i) {
@@ -438,11 +507,28 @@ void createVirusVertical() {
 		virusVertical[i].x = 2;
 		virusVertical[i].y = 1 + i;
 
+		virusVertical[i].onoff = 0;
+
 		SetCurrentCursorPos(virusVertical[i].x, virusVertical[i].y);
 		printf("*");
 		virusVertical[i].visible = 1;
 	}
 	WHITE
+}
+
+void createVirusHorizontal() {
+
+
+	for (int i = 0; i < GBOARD_WIDTH - 4; i++) {
+		virusHorizontal[i].x = 2 + i;
+		virusHorizontal[i].y = 28;
+
+		SetCurrentCursorPos(virusHorizontal[i].x, virusHorizontal[i].y);
+		printf("*");
+
+
+
+	}
 }
 
 void createVirusSquare() {
@@ -543,15 +629,131 @@ int DetectCollision(int posX, int posY) {
 	return 1;
 }
 
+int DetectCollisionVW(int posX, int posY) {
+
+	if (posX == 1 || posX + 1 > GBOARD_WIDTH - 3 || posY == 0 || posY == GBOARD_HEIGHT - 1)
+		return 0;
+
+	return 1;
+}
+
+void pre_remove() {
+	int x, y, k;
+	int i = 0, j = 0;
+
+	x = preX - 2;
+	y = preY - 1;
+
+	for (k = 0; k < 9; k++) {
+		spear_ready[k].x = x + i * 2;
+		i++;
+		spear_ready[k].y = y + j;
+
+		if (i % 3 == 0) {
+			j++;
+			i = 0;
+		}
+
+	}
+
+	for (k = 0; k < 9; k++) {
+		SetCurrentCursorPos(spear_ready[1].x, spear_ready[1].y);
+		printf("  ");
+		SetCurrentCursorPos(spear_ready[3].x, spear_ready[3].y);
+		printf("  ");
+		SetCurrentCursorPos(spear_ready[5].x, spear_ready[5].y);
+		printf("  ");
+		SetCurrentCursorPos(spear_ready[7].x, spear_ready[7].y);
+		printf("  ");
+		SetCurrentCursorPos(spear_ready[4].x, spear_ready[4].y);
+		printf(" ");
+	}
+}
+
+void spear_wear() {
+
+	int x, y, k;
+	int i = 0, j = 0;
+
+	x = humanCurPosX - 2;
+	y = humanCurPosY - 1;
+
+	pre_remove();
+
+	for (k = 0; k < 9; k++) {
+		spear_ready[k].x = x + i * 2;
+		i++;
+		spear_ready[k].y = y + j;
+
+		if (i % 3 == 0) {
+			j++;
+			i = 0;
+		}
+
+	}
+
+
+
+
+	SetCurrentCursorPos(spear_ready[1].x, spear_ready[1].y);
+	printf("▲");
+	SetCurrentCursorPos(spear_ready[3].x, spear_ready[3].y);
+	printf("◀");
+	SetCurrentCursorPos(spear_ready[5].x, spear_ready[5].y);
+	printf("▶");
+	SetCurrentCursorPos(spear_ready[7].x, spear_ready[7].y);
+	printf("▼");
+	SetCurrentCursorPos(spear_ready[4].x, spear_ready[4].y);
+	printf("@");
+
+
+
+
+
+	preX = humanCurPosX;
+	preY = humanCurPosY;
+
+
+}
+
+void spear_item() {
+	if (spear_xy.get_check == 0) {
+
+		srand((unsigned int)time(NULL));
+
+		if (spear_flag == 0) {
+			spear_xy.x = 40;
+			spear_xy.y = 15;
+			spear_flag = 1;
+		}
+
+		SetCurrentCursorPos(spear_xy.x, spear_xy.y);
+		printf("S");
+
+		if (spear_xy.x == humanCurPosX && spear_xy.y == humanCurPosY) {
+			spear_xy.get_check = 1;
+			SetCurrentCursorPos(spear_xy.x, spear_xy.y);
+			printf(" ");
+
+			spear_wear();
+
+		}
+
+	}
+}
+
 void ShiftRight(void) {
 
 	if (!DetectCollision(humanCurPosX + 1, humanCurPosY))
 		return;
 	SetCurrentCursorPos(humanCurPosX, humanCurPosY);
 	printf(" ");
-	humanCurPosX += 2;
+	humanCurPosX += 1;
 	SetCurrentCursorPos(humanCurPosX, humanCurPosY);
 	printf("@");
+
+	if (spear_xy.get_check == 1)
+		spear_wear();
 
 }
 
@@ -561,9 +763,12 @@ void ShiftLeft(void) {
 		return;
 	SetCurrentCursorPos(humanCurPosX, humanCurPosY);
 	printf(" ");
-	humanCurPosX -= 2;
+	humanCurPosX -= 1;
 	SetCurrentCursorPos(humanCurPosX, humanCurPosY);
 	printf("@");
+
+	if (spear_xy.get_check == 1)
+		spear_wear();
 }
 
 void ShiftUp(void) {
@@ -575,6 +780,9 @@ void ShiftUp(void) {
 	humanCurPosY -= 1;
 	SetCurrentCursorPos(humanCurPosX, humanCurPosY);
 	printf("@");
+
+	if (spear_xy.get_check == 1)
+		spear_wear();
 }
 
 void ShiftDown(void) {
@@ -586,54 +794,61 @@ void ShiftDown(void) {
 	humanCurPosY += 1;
 	SetCurrentCursorPos(humanCurPosX, humanCurPosY);
 	printf("@");
+
+	if (spear_xy.get_check == 1)
+		spear_wear();
 }
 //추적 바이러스
 void trackingVirus() {
 
 	for (int i = 0; i < 5; i++) {
-		SetCurrentCursorPos(virus[i].x, virus[i].y);
-		printf(" ");
 
-		int x, y;
-		x = virus[i].x - humanCurPosX;
-		y = virus[i].y - humanCurPosY;
+		if (virus[i].killed_flag == 0) {
 
-		if (x == 0 && y == 0)
-			continue;
-		else if (x == 0) {
-			if (y > 0)
-				virus[i].y--;
-			else
-				virus[i].y++;
-		}
-		else if (y == 0) {
-			if (x > 0)
-				virus[i].x--;
-			else
-				virus[i].x++;
-		}
-		else if (x > 0 && y > 0) {
-			virus[i].x--;
-			virus[i].y--;
-		}
-		else if (x > 0 && y < 0) {
-			virus[i].x--;
-			virus[i].y++;
-		}
-		else if (x < 0 && y > 0) {
-			virus[i].x++;
-			virus[i].y--;
-		}
-		else {
-			virus[i].x++;
-			virus[i].y++;
-		}
-
-		RED
 			SetCurrentCursorPos(virus[i].x, virus[i].y);
-		printf("*");
+			printf(" ");
+
+			int x, y;
+			x = virus[i].x - humanCurPosX;
+			y = virus[i].y - humanCurPosY;
+
+			if (x == 0 && y == 0)
+				continue;
+			else if (x == 0) {
+				if (y > 0)
+					virus[i].y--;
+				else
+					virus[i].y++;
+			}
+			else if (y == 0) {
+				if (x > 0)
+					virus[i].x--;
+				else
+					virus[i].x++;
+			}
+			else if (x > 0 && y > 0) {
+				virus[i].x--;
+				virus[i].y--;
+			}
+			else if (x > 0 && y < 0) {
+				virus[i].x--;
+				virus[i].y++;
+			}
+			else if (x < 0 && y > 0) {
+				virus[i].x++;
+				virus[i].y--;
+			}
+			else {
+				virus[i].x++;
+				virus[i].y++;
+			}
+
+			RED
+				SetCurrentCursorPos(virus[i].x, virus[i].y);
+			printf("*");
+		}
+		WHITE
 	}
-	WHITE
 }
 
 void trackingVirusOneby() {
@@ -687,27 +902,61 @@ void trackingVirusOneby() {
 
 void trackingVirusVertical() {
 
-	if (virusVertical[0].x + 4 > GBOARD_WIDTH) {
-		for (int i = 0; i < GBOARD_HEIGHT - 2; i++) {
-			SetCurrentCursorPos(virusVertical[i].x, virusVertical[i].y);
-			printf(" ");
-		}
-		return;
-	}
+	if (virusVertical[0].onoff == 0) {
 
-	for (int i = 0; i < GBOARD_HEIGHT - 2; i++) {
-		if (virusVertical[i].visible == 1) {
-			SetCurrentCursorPos(virusVertical[i].x, virusVertical[i].y);
-			printf(" ");
-
-			virusVertical[i].x++;
-
-			RED
+		if (virusVertical[0].x + 4 > GBOARD_WIDTH) {
+			for (int i = 0; i < GBOARD_HEIGHT - 2; i++) {
 				SetCurrentCursorPos(virusVertical[i].x, virusVertical[i].y);
-			printf("*");
+				printf(" ");
+			}
+			return;
 		}
+
+		for (int i = 0; i < GBOARD_HEIGHT - 2; i++) {
+			if (virusVertical[i].visible == 1) {
+				SetCurrentCursorPos(virusVertical[i].x, virusVertical[i].y);
+				printf(" ");
+
+				virusVertical[i].x++;
+
+
+				if (virusVertical[i].x == 97) {
+					for (int i = 0; i < GBOARD_HEIGHT - 2; i++) {
+						SetCurrentCursorPos(virusVertical[i].x, virusVertical[i].y);
+						printf(" ");
+						virusVertical[i].x = 999; virusVertical[i].y = 999;
+					}
+					virusVertical[0].onoff = 1;
+					break;
+				}
+
+
+
+				RED
+					SetCurrentCursorPos(virusVertical[i].x, virusVertical[i].y);
+				printf("*");
+			}
+		}
+		WHITE
 	}
-	WHITE
+}
+void trackingVirusHorizontal() {
+
+	for (int i = 0; i < GBOARD_WIDTH - 4; i++) {
+
+		SetCurrentCursorPos(virusHorizontal[i].x, virusHorizontal[i].y);
+		printf(" ");
+
+
+		virusHorizontal[i].y--;
+
+		SetCurrentCursorPos(virusHorizontal[i].x, virusHorizontal[i].y);
+		printf("*");
+
+
+
+	}
+
 }
 //인간 이동
 void moveHuman() {
@@ -734,11 +983,119 @@ void moveHuman() {
 	}
 }
 
+void boom_shoot() {
+
+	int x, y;
+	int i = 1, j = 0;
+	int k = 1;
+	int a, b, c, d;
+
+	x = boom_xy.x - 8;
+	y = boom_xy.y - 2;
+
+	for (k = 0; k < 36; k++) {
+
+
+		boom_ready[k].x = x + i * 2;
+		boom_ready[k].y = y + j;
+
+		i++;
+
+		if (i % 7 == 0) {
+			j++;
+			i = 1;
+		}
+	}
+
+
+	for (k = 0; k < 36; k++) {
+
+		SetCurrentCursorPos(boom_ready[k].x, boom_ready[k].y);
+		printf("■");
+
+	}
+	Sleep(300);
+
+	for (k = 0; k < 36; k++) {
+
+		for (a = 0; a < 5; a++) {
+			if (boom_ready[0].x <= virus[a].x && boom_ready[0].y <= virus[a].y &&
+				boom_ready[5].x >= virus[a].x && boom_ready[5].y <= virus[a].y &&
+				boom_ready[30].x <= virus[a].x && boom_ready[30].y >= virus[a].y &&
+				boom_ready[35].x >= virus[a].x && boom_ready[35].y >= virus[a].y) {
+				virus[a].x = 1000;
+				virus[a].y = 1000;
+				virus[a].killed_flag = 1;
+			}
+		}
+
+	}
+
+	for (a = 0; a < 5; a++) {
+		if (virus[a].x == 1000 && virus[a].y == 1000) {
+			game_util.score += 5;
+			createScore();
+		}
+	}
+
+	for (k = 0; k < 36; k++) {
+
+		SetCurrentCursorPos(boom_ready[k].x, boom_ready[k].y);
+		printf("  ");
+
+	}
+
+	SetCurrentCursorPos(humanCurPosX, humanCurPosY);
+	printf("@");
+
+	Sleep(30);
+
+
+
+}
+
+void boom_item() {
+
+	if (boom_xy.get_check == 0) {
+
+		srand((unsigned int)time(NULL));
+
+		if (boom_flag == 0) {
+			boom_xy.x = 60;
+			boom_xy.y = 15;
+			boom_flag = 1;
+		}
+
+		SetCurrentCursorPos(boom_xy.x, boom_xy.y);
+		printf("X");
+
+
+		if (boom_xy.x == humanCurPosX && boom_xy.y == humanCurPosY) {
+			boom_xy.get_check = 1;
+			SetCurrentCursorPos(boom_xy.x, boom_xy.y);
+			printf(" ");
+
+			boom_shoot();
+
+		}
+
+	}
+}
+
+
+
+
 int main() {
+
+	game_util.score = 0;
+
 	int i, j, num_cnt = 0;
 	int check = 0;
 	int vertical_cnt = 0;
 	int circle_cnt = 0;
+
+	boom_xy.get_check = 0;
+	spear_xy.get_check = 0;
 
 	system("mode con:cols=130 lines=30");   // cols: 가로, lines: 세로
 	removeCursor();
@@ -747,6 +1104,7 @@ int main() {
 		start_time = clock();
 	createTime();
 	createLife();
+	createScore();
 
 	createHuman();
 	createVirus();
@@ -768,11 +1126,13 @@ int main() {
 
 		for (j = 0; j <= num_cnt; j++)
 		{
-			createVirusOneby();
+			//createVirusOneby();
 		}
 
-		trackingVirus();
-		trackingVirusOneby();
+		//trackingVirus();
+		//trackingVirusOneby();
+
+
 
 		check = DetectCollisionV();
 		if (check == 2) {
@@ -798,21 +1158,35 @@ int main() {
 			check = 0;
 		}
 
+
+
 		if (vertical_num == 10) {
-			createVirusVertical();
+			//createVirusHorizontal();
+			//createVirusVertical();
 			//createVirusCircle();
 			//createVirusSquare();
 			vertical_cnt++;
 		}
 
 		if (vertical_cnt >= 1) {
-			trackingVirusVertical();
+			//trackingVirusVertical();
+			//trackingVirusHorizontal();
+
 		}
 
 		Sleep(100);
 		i++;
 		end_time = clock();
 		updateTime();
+
+		boom_item();
+		spear_item();
+
+		if (spear_xy.get_check == 1) {
+			spear_wear();
+		}
+
+
 	}
 
 	getchar();
